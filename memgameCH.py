@@ -1,4 +1,6 @@
-import random, pygame, sys
+import pygame
+import sys
+import random
 from pygame.locals import *
 
 # Constants for game parameters
@@ -42,38 +44,105 @@ OVAL = 'oval'
 ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
 ALLSHAPES = (SQUARE, DIAMOND, LINES, OVAL)
 
-# Main function to start the game
-def main():
+
+# # Constants for game parameters
+# FPS = 30
+# WINDOWWIDTH = 640
+# WINDOWHEIGHT = 480
+# REVEALSPEED = 8
+# GAPSIZE = 10
+# XMARGIN = int((WINDOWWIDTH - (BOARDWIDTH * (BOXSIZE + GAPSIZE))) / 2)
+# YMARGIN = int((WINDOWHEIGHT - (BOARDHEIGHT * (BOXSIZE + GAPSIZE))) / 2)
+
+# Difficulty levels
+EASY = {'BOARDWIDTH': 4, 'BOARDHEIGHT': 2, 'NUMICONS': 4}
+MEDIUM = {'BOARDWIDTH': 6, 'BOARDHEIGHT': 3, 'NUMICONS': 9}
+HARD = {'BOARDWIDTH': 8, 'BOARDHEIGHT': 4, 'NUMICONS': 16}
+
+# Other game constants
+WHITE = (255, 255, 255)
+BGCOLOR = WHITE
+
+# Pygame initialization
+pygame.init()
+
+# Function to display the welcome screen and choose difficulty level
+def welcomeScreen():
     global FPSCLOCK, DISPLAYSURF
-    pygame.init()
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 
-    # Initialize mouse coordinates
-    mousex = 0
-    mousey = 0
-
-    # Set window caption
     pygame.display.set_caption('Memory Game')
 
-    # Generate random game board and initialize revealed boxes
-    mainBoard = getRandomizedBoard()
+    # Welcome message and difficulty selection
+    DISPLAYSURF.fill(BLACK)
+    font = pygame.font.SysFont('arial', 42)
+    titleText = font.render("Welcome to Memory Game!", True, WHITE)
+    titleRect = titleText.get_rect()
+    titleRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 4)
+    DISPLAYSURF.blit(titleText, titleRect)
+
+    font = pygame.font.SysFont('arial', 28)
+    easyText = font.render("Easy 3x4 grid", True, WHITE)
+    easyRect = easyText.get_rect()
+    easyRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2)
+    DISPLAYSURF.blit(easyText, easyRect)
+
+    mediumText = font.render("Medium 4x4 grid", True, WHITE)
+    mediumRect = mediumText.get_rect()
+    mediumRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 40)
+    DISPLAYSURF.blit(mediumText, mediumRect)
+
+    hardText = font.render("Hard 6x6 grid", True, WHITE)
+    hardRect = hardText.get_rect()
+    hardRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 80)
+    DISPLAYSURF.blit(hardText, hardRect)
+
+    pygame.display.update()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                pygame.quit()
+                sys.exit()
+            elif event.type == MOUSEBUTTONUP:
+                mousex, mousey = event.pos
+                if easyRect.collidepoint(mousex, mousey):
+                    return EASY
+                elif mediumRect.collidepoint(mousex, mousey):
+                    return MEDIUM
+                elif hardRect.collidepoint(mousex, mousey):
+                    return HARD
+
+# Function to start the game
+def main():
+    difficulty = welcomeScreen()
+
+    BOARDWIDTH = difficulty['BOARDWIDTH']
+    BOARDHEIGHT = difficulty['BOARDHEIGHT']
+    NUMICONS = difficulty['NUMICONS']
+
+    # Other game parameters
+    BOXSIZE = 70
+    NAVYBLUE = (60, 60, 100)
+    BOXCOLOR = NAVYBLUE
+    HIGHLIGHTCOLOR = (0, 0, 255)
+
+    # Initialize game
+    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    mainBoard = getRandomizedBoard(NUMICONS)
     revealedBoxes = generateRevealedBoxesData(False)
+    firstSelection = None
 
-    firstSelection = None  # stores the (x, y) of the first box clicked.
-
-    # Start game animation
-    DISPLAYSURF.fill(BGCOLOR)
     startGameAnimation(mainBoard)
 
-    # Main game loop
     while True:
         mouseClicked = False
 
-        DISPLAYSURF.fill(BGCOLOR)  # drawing the window
+        DISPLAYSURF.fill(BGCOLOR)
         drawBoard(mainBoard, revealedBoxes)
 
-        for event in pygame.event.get():  # event handling loop
+        for event in pygame.event.get():  
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.quit()
                 sys.exit()
@@ -83,48 +152,33 @@ def main():
                 mousex, mousey = event.pos
                 mouseClicked = True
 
-        boxx, boxy = getBoxAtPixel(mousex, mousey)
-        if boxx != None and boxy != None:
-            # The mouse is currently over a box.
-            if not revealedBoxes[boxx][boxy]:
-                drawHighlightBox(boxx, boxy)
-            if not revealedBoxes[boxx][boxy] and mouseClicked:
-                revealBoxesAnimation(mainBoard, [(boxx, boxy)])
-                revealedBoxes[boxx][boxy] = True  # set the box as "revealed"
-                if firstSelection == None:  # the current box was the first box clicked
-                    firstSelection = (boxx, boxy)
-                else:  # the current box was the second box clicked
-                    # Check if there is a match between the two icons.
-                    icon1shape, icon1color = getShapeAndColor(mainBoard, firstSelection[0], firstSelection[1])
-                    icon2shape, icon2color = getShapeAndColor(mainBoard, boxx, boxy)
+            if mouseClicked:  # Ensure this block is inside the event handling loop
+       
+                boxx, boxy = getBoxAtPixel(mousex, mousey)
+                if boxx != None and boxy != None:
+                    if not revealedBoxes[boxx][boxy]:
+                        drawHighlightBox(boxx, boxy)
+                    if not revealedBoxes[boxx][boxy] and mouseClicked:
+                        revealBoxesAnimation(mainBoard, [(boxx, boxy)])
+                        revealedBoxes[boxx][boxy] = True
+                        if firstSelection == None:
+                            firstSelection = (boxx, boxy)
+                        else:
+                            icon1shape, icon1color = getShapeAndColor(mainBoard, firstSelection[0], firstSelection[1])
+                            icon2shape, icon2color = getShapeAndColor(mainBoard, boxx, boxy)
 
-                    if icon1shape != icon2shape or icon1color != icon2color:
-                        # Icons don't match. Re-cover up both selections.
-                        pygame.time.wait(1000)  # 1000 milliseconds = 1 sec
-                        coverBoxesAnimation(mainBoard, [(firstSelection[0], firstSelection[1]), (boxx, boxy)])
-                        revealedBoxes[firstSelection[0]][firstSelection[1]] = False
-                        revealedBoxes[boxx][boxy] = False
-                    elif hasWon(revealedBoxes):  # check if all pairs found
-                        displayBlankBaord(mainBoard)
-                        gameWonMessage()
-                        
-                        '''This is the auto reset part when the game is won that need an urgent fix to give player a choice'''
-                    #     # Reset the board
-                    #     mainBoard = getRandomizedBoard()
-                    #     revealedBoxes = generateRevealedBoxesData(False)
+                            if icon1shape != icon2shape or icon1color != icon2color:
+                                pygame.time.wait(1000)
+                                coverBoxesAnimation(mainBoard, [(firstSelection[0], firstSelection[1]), (boxx, boxy)])
+                                revealedBoxes[firstSelection[0]][firstSelection[1]] = False
+                                revealedBoxes[boxx][boxy] = False
+                            elif hasWon(revealedBoxes):
+                                displayBlankBoard(mainBoard)
+                            firstSelection = None  # reset firstSelection variable
 
-                    #     # Show the fully unrevealed board for a second.
-                    #     drawBoard(mainBoard, revealedBoxes)
-                    #     pygame.display.update()
-                    #     pygame.time.wait(1000)
-
-                    #     # Replay the start game animation.
-                    #     startGameAnimation(mainBoard)
-                    # firstSelection = None  # reset firstSelection variable
-
-        # Redraw the screen and wait a clock tick.
         pygame.display.update()
         FPSCLOCK.tick(FPS)
+
 
 
 # Function to generate revealed boxes data
@@ -142,7 +196,7 @@ def generateRevealedBoxesData(val):
 
 # Function to generate a randomized game board
 # Gameboard GUI
-def getRandomizedBoard():
+def getRandomizedBoard(numIcons):
     """
     Creates a randomized game board with a set of icons.
     The board is a 2D list of tuples, where each tuple contains a shape and a color.
@@ -153,7 +207,7 @@ def getRandomizedBoard():
             icons.append((shape, color))
 
     random.shuffle(icons)  # randomize the order of the icons list
-    numIconsUsed = int(BOARDWIDTH * BOARDHEIGHT / 2)  # calculate how many icons are needed
+    numIconsUsed = int(numIcons / 2)  # calculate how many icons are needed
     icons = icons[:numIconsUsed] * 2  # make two of each
     random.shuffle(icons)
 
@@ -166,7 +220,6 @@ def getRandomizedBoard():
             del icons[0]  # remove the icons as we assign them
         board.append(column)
     return board
-
 
 # Function to split a list into groups of a specified size
 def splitIntoGroupsOf(groupSize, theList):
@@ -306,20 +359,20 @@ def startGameAnimation(board):
 
 
 # display the blankboard when the game is won
-def displayBlankBaord(board):
+def displayBlankBoard(board):
     coveredBoxes = generateRevealedBoxesData(True)
     DISPLAYSURF.fill(BGCOLOR)
     drawBoard(board, coveredBoxes)
     pygame.display.update()
 
 # Display the message the the user won the game
-def gameWonMessage():
-    font = pygame.font.Font(None, 36)
-    text = font.render("Congratulations! You've won the game!", True, BLACK)
-    textRect = text.get_rect()
-    textRect.center = (WINDOWWIDTH //2 , WINDOWHEIGHT //2)
-    DISPLAYSURF.blit(text, textRect)
-    pygame.display.update()
+# def gameWonMessage():
+#     font = pygame.font.Font(None, 36)
+#     text = font.render("Congratulations! You've won the game!", True, BLACK)
+#     textRect = text.get_rect()
+#     textRect.center = (WINDOWWIDTH //2 , WINDOWHEIGHT //2)
+#     DISPLAYSURF.blit(text, textRect)
+#     pygame.display.update()
     
 
 
