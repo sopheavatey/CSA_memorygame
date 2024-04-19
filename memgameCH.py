@@ -32,7 +32,7 @@ BOXCOLOR = NAVYBLUE
 HIGHLIGHTCOLOR = BLUE
 
 # Shape constants
-DONUT = 'donut'
+# DONUT = 'donut'
 SQUARE = 'square'
 DIAMOND = 'diamond'
 LINES = 'lines'
@@ -40,7 +40,7 @@ OVAL = 'oval'
 
 # Lists of all possible colors and shapes
 ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
-ALLSHAPES = (DONUT, SQUARE, DIAMOND, LINES, OVAL)
+ALLSHAPES = (SQUARE, DIAMOND, LINES, OVAL)
 
 # Main function to start the game
 def main():
@@ -105,24 +105,22 @@ def main():
                         revealedBoxes[firstSelection[0]][firstSelection[1]] = False
                         revealedBoxes[boxx][boxy] = False
                     elif hasWon(revealedBoxes):  # check if all pairs found
-                        # gameWonAnimation(mainBoard)
-                        # pygame.time.wait(2000)
                         displayBlankBaord(mainBoard)
-                        # pygame.time.wait(10000)
                         gameWonMessage()
                         
-                        # Reset the board
-                        mainBoard = getRandomizedBoard()
-                        revealedBoxes = generateRevealedBoxesData(False)
+                        '''This is the auto reset part when the game is won that need an urgent fix to give player a choice'''
+                    #     # Reset the board
+                    #     mainBoard = getRandomizedBoard()
+                    #     revealedBoxes = generateRevealedBoxesData(False)
 
-                        # Show the fully unrevealed board for a second.
-                        drawBoard(mainBoard, revealedBoxes)
-                        pygame.display.update()
-                        pygame.time.wait(1000)
+                    #     # Show the fully unrevealed board for a second.
+                    #     drawBoard(mainBoard, revealedBoxes)
+                    #     pygame.display.update()
+                    #     pygame.time.wait(1000)
 
-                        # Replay the start game animation.
-                        startGameAnimation(mainBoard)
-                    firstSelection = None  # reset firstSelection variable
+                    #     # Replay the start game animation.
+                    #     startGameAnimation(mainBoard)
+                    # firstSelection = None  # reset firstSelection variable
 
         # Redraw the screen and wait a clock tick.
         pygame.display.update()
@@ -143,6 +141,7 @@ def generateRevealedBoxesData(val):
 
 
 # Function to generate a randomized game board
+# Gameboard GUI
 def getRandomizedBoard():
     """
     Creates a randomized game board with a set of icons.
@@ -216,10 +215,10 @@ def drawIcon(shape, color, boxx, boxy):
     half = int(BOXSIZE * 0.5)
 
     left, top = leftTopCoordsOfBox(boxx, boxy)
-    if shape == DONUT:
-        pygame.draw.circle(DISPLAYSURF, color, (left + half, top + half), half - 5)
-        pygame.draw.circle(DISPLAYSURF, BGCOLOR, (left + half, top + half), quarter - 5)
-    elif shape == SQUARE:
+    # if shape == DONUT:
+    #     pygame.draw.circle(DISPLAYSURF, color, (left + half, top + half), half - 5)
+    #     pygame.draw.circle(DISPLAYSURF, BGCOLOR, (left + half, top + half), quarter - 5)
+    if shape == SQUARE:
         pygame.draw.rect(DISPLAYSURF, color, (left + quarter, top + quarter, BOXSIZE - half, BOXSIZE - half))
     elif shape == DIAMOND:
         pygame.draw.polygon(DISPLAYSURF, color, ((left + half, top), (left + BOXSIZE - 1, top + half), (left + half, top + BOXSIZE - 1), (left, top + half)))
@@ -306,19 +305,6 @@ def startGameAnimation(board):
         coverBoxesAnimation(board, boxGroup)
 
 
-# Function for the game won animation
-# def gameWonAnimation(board):
-#     coveredBoxes = generateRevealedBoxesData(True)
-#     color1 = LIGHTBGCOLOR
-#     color2 = BGCOLOR
-
-#     for i in range(13):  # 13 iterations of animation
-#         color1, color2 = color2, color1  # swap colors for each iteration
-#         DISPLAYSURF.fill(color1)  # fill the background with the current color
-#         drawBoard(board, coveredBoxes)  # draw the board with all boxes covered
-#         pygame.display.update()  # update the display with the new background color and board
-#         pygame.time.wait(300)  # wait for 300 milliseconds before swapping colors again
-
 # display the blankboard when the game is won
 def displayBlankBaord(board):
     coveredBoxes = generateRevealedBoxesData(True)
@@ -334,7 +320,7 @@ def gameWonMessage():
     textRect.center = (WINDOWWIDTH //2 , WINDOWHEIGHT //2)
     DISPLAYSURF.blit(text, textRect)
     pygame.display.update()
-    # pygame.time.wait(2000)
+    
 
 
 # Function to check if all boxes are revealed
