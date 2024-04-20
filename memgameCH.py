@@ -1,3 +1,5 @@
+'''Not an important file'''
+
 import pygame
 import sys
 import random
@@ -15,9 +17,7 @@ BOARDHEIGHT = 0
 NUMICONS = 0
 XMARGIN = int((WINDOWWIDTH - (BOARDWIDTH * (BOXSIZE + GAPSIZE))) / 2)
 YMARGIN = int((WINDOWHEIGHT - (BOARDHEIGHT * (BOXSIZE + GAPSIZE))) / 2)
-board_width = BOARDWIDTH
-board_height = BOARDHEIGHT
-num_icons = NUMICONS
+
 
 # Color constants
 GRAY = (100, 100, 100)
@@ -38,8 +38,7 @@ LIGHTBGCOLOR = GRAY
 BOXCOLOR = NAVYBLUE
 HIGHLIGHTCOLOR = BLUE
 
-# Shape constants
-# DONUT = 'donut'
+
 SQUARE = 'square'
 DIAMOND = 'diamond'
 LINES = 'lines'
@@ -50,7 +49,7 @@ ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
 ALLSHAPES = (SQUARE, DIAMOND, LINES, OVAL)
 
 # Difficulty levels
-EASY = {board_width : 3, board_height : 4, num_icons : 4}
+EASY = {'BOARDWIDTH': 6, 'BOARDHEIGHT': 3, 'NUMICONS': 9}
 MEDIUM = {'BOARDWIDTH': 6, 'BOARDHEIGHT': 3, 'NUMICONS': 9}
 HARD = {'BOARDWIDTH': 8, 'BOARDHEIGHT': 4, 'NUMICONS': 16}
 
@@ -127,7 +126,7 @@ def main():
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 
     pygame.display.set_caption('Memory Game')
-    
+
     # Initialize game
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     mainBoard = getRandomizedBoard(NUMICONS)
