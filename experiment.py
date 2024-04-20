@@ -25,8 +25,10 @@ ORANGE   = (255, 128,   0)
 PURPLE   = (255,   0, 255)
 CYAN     = (  0, 255, 255)
 BLACK    = (  0,  0,  0)
+LIGHTGRAY= (240, 240, 240)
+DARKGRAY = (40, 40, 40)
 
-BGCOLOR = WHITE
+BGCOLOR = LIGHTGRAY
 LIGHTBGCOLOR = GRAY
 BOXCOLOR = NAVYBLUE
 HIGHLIGHTCOLOR = BLACK
@@ -56,8 +58,8 @@ def main():
 
     firstSelection = None # stores the (x, y) of the first box clicked.
 
-    DISPLAYSURF.fill(BGCOLOR)
-    startGameAnimation(mainBoard)
+    # DISPLAYSURF.fill(BGCOLOR)
+    # startGameAnimation(mainBoard)
 
     while True: # main game loop
         mouseClicked = False
@@ -288,9 +290,9 @@ def startGameAnimation(board):
     #Draw the initial state of the game board with all boxes covered
     drawBoard(board, coveredBoxes) 
     #Iterate through each group of boxes and reveal them one group at a time with a slight delay between each group
-    for boxGroup in boxGroups:
-        revealBoxesAnimation(board, boxGroup)
-        coverBoxesAnimation(board, boxGroup)
+    # for boxGroup in boxGroups:
+    #     revealBoxesAnimation(board, boxGroup)
+    #     coverBoxesAnimation(board, boxGroup)
 
 
 def hasWon(revealedBoxes):
@@ -307,26 +309,26 @@ def hasWon(revealedBoxes):
 def showCongratulations():
     # Display congratulatory message and options for continuing or quitting
     while True:
-        DISPLAYSURF.fill(WHITE)
+        DISPLAYSURF.fill(DARKGRAY)
 
-        font = pygame.font.SysFont('arial', 42)
-        congratulationText = font.render("Congratulations! You've won!", True, BLACK)
+        font = pygame.font.SysFont('comic sans', 42)
+        congratulationText = font.render("Congratulations!You've won!", True, WHITE)
         congratulationRect = congratulationText.get_rect()
         congratulationRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 4)
         DISPLAYSURF.blit(congratulationText, congratulationRect)
 
-        font = pygame.font.SysFont('arial', 28)
-        continueText = font.render("Continue playing?", True, BLACK)
+        font = pygame.font.SysFont('comic sans', 28)
+        continueText = font.render("Continue playing?", True, WHITE)
         continueRect = continueText.get_rect()
         continueRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2)
         DISPLAYSURF.blit(continueText, continueRect)
 
-        yesText = font.render("Yes", True, BLACK)
+        yesText = font.render("Yes", True, WHITE)
         yesRect = yesText.get_rect()
         yesRect.center = (WINDOWWIDTH // 2 - 50, WINDOWHEIGHT // 2 + 40)
         DISPLAYSURF.blit(yesText, yesRect)
 
-        noText = font.render("No", True, BLACK)
+        noText = font.render("No", True, WHITE)
         noRect = noText.get_rect()
         noRect.center = (WINDOWWIDTH // 2 + 50, WINDOWHEIGHT // 2 + 40)
         DISPLAYSURF.blit(noText, noRect)
@@ -346,10 +348,10 @@ def showCongratulations():
                 
 def showThankYouMessage():
     # Display "thank you" message before quitting the game
-    DISPLAYSURF.fill(WHITE)
+    DISPLAYSURF.fill(DARKGRAY)
 
-    font = pygame.font.SysFont('arial', 42)
-    thankYouText = font.render("Thank you for playing!", True, BLACK)
+    font = pygame.font.SysFont('comic sans', 42)
+    thankYouText = font.render("Thank you for playing!", True, WHITE)
     thankYouRect = thankYouText.get_rect()
     thankYouRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2)
     DISPLAYSURF.blit(thankYouText, thankYouRect)
