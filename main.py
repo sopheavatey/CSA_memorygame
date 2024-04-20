@@ -23,13 +23,10 @@ BLUE     = (  0,   0, 255)
 YELLOW   = (255, 255,   0)
 ORANGE   = (255, 128,   0)
 PURPLE   = (255,   0, 255)
-NAVYBLUE = ( 60,  60, 100)
 LIGHTGRAY= (240, 240, 240)
 DARKGRAY = ( 40,  40,  40)
-PORANGE  = (255, 144,  78)
-PSKIN    = (250, 248, 226)
 
-BGCOLOR = PSKIN
+BGCOLOR = (250, 248, 226)
 LIGHTBGCOLOR = GRAY
 BOXCOLOR = DARKGRAY
 HIGHLIGHTCOLOR = (127, 146, 158)
@@ -54,7 +51,7 @@ def main():
     pygame.display.set_caption('Memory Game')
 
     while True:
-        DISPLAYSURF.fill(PSKIN) 
+        DISPLAYSURF.fill(BGCOLOR) 
 
         font = pygame.font.SysFont('comic sans', 42, bold = True)
         titleText = font.render("WELCOME TO MEMORY GAME ", True,(255, 120, 20) )  
@@ -349,7 +346,7 @@ def hasWon(revealedBoxes):
 def showCongratulations():
     # Display congratulatory message and options for continuing or quitting
     while True:
-        DISPLAYSURF.fill(PSKIN)
+        DISPLAYSURF.fill(BGCOLOR)
 
         font = pygame.font.SysFont('comic sans', 42, bold=True)
         congratulationText = font.render("Congratulations! You've won!", True, BLACK)
@@ -388,7 +385,7 @@ def showCongratulations():
                 
 def showThankYouMessage():
     # Display "thank you" message before quitting the game
-    DISPLAYSURF.fill(PSKIN)
+    DISPLAYSURF.fill(BGCOLOR)
 
     font = pygame.font.SysFont('comic sans', 42)
     thankYouText = font.render("Thank you for playing!", True, (80, 31, 142))
