@@ -10,10 +10,14 @@ WINDOWHEIGHT = 480
 REVEALSPEED = 8
 BOXSIZE = 70
 GAPSIZE = 10
-BOARDWIDTH = 2
-BOARDHEIGHT = 2
+BOARDWIDTH = 0
+BOARDHEIGHT = 0
+NUMICONS = 0
 XMARGIN = int((WINDOWWIDTH - (BOARDWIDTH * (BOXSIZE + GAPSIZE))) / 2)
 YMARGIN = int((WINDOWHEIGHT - (BOARDHEIGHT * (BOXSIZE + GAPSIZE))) / 2)
+board_width = BOARDWIDTH
+board_height = BOARDHEIGHT
+num_icons = NUMICONS
 
 # Color constants
 GRAY = (100, 100, 100)
@@ -27,6 +31,7 @@ ORANGE = (255, 128, 0)
 PURPLE = (255, 0, 255)
 CYAN = (0, 255, 255)
 BLACK = (0, 0, 0)
+
 # Color constants for the game
 BGCOLOR = WHITE
 LIGHTBGCOLOR = GRAY
@@ -44,18 +49,8 @@ OVAL = 'oval'
 ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
 ALLSHAPES = (SQUARE, DIAMOND, LINES, OVAL)
 
-
-# # Constants for game parameters
-# FPS = 30
-# WINDOWWIDTH = 640
-# WINDOWHEIGHT = 480
-# REVEALSPEED = 8
-# GAPSIZE = 10
-# XMARGIN = int((WINDOWWIDTH - (BOARDWIDTH * (BOXSIZE + GAPSIZE))) / 2)
-# YMARGIN = int((WINDOWHEIGHT - (BOARDHEIGHT * (BOXSIZE + GAPSIZE))) / 2)
-
 # Difficulty levels
-EASY = {'BOARDWIDTH': 4, 'BOARDHEIGHT': 2, 'NUMICONS': 4}
+EASY = {board_width : 3, board_height : 4, num_icons : 4}
 MEDIUM = {'BOARDWIDTH': 6, 'BOARDHEIGHT': 3, 'NUMICONS': 9}
 HARD = {'BOARDWIDTH': 8, 'BOARDHEIGHT': 4, 'NUMICONS': 16}
 
@@ -116,11 +111,11 @@ def welcomeScreen():
 
 # Function to start the game
 def main():
-    difficulty = welcomeScreen()
+    # difficulty = welcomeScreen()
 
-    BOARDWIDTH = difficulty['BOARDWIDTH']
-    BOARDHEIGHT = difficulty['BOARDHEIGHT']
-    NUMICONS = difficulty['NUMICONS']
+    # BOARDWIDTH = difficulty['BOARDWIDTH']
+    # BOARDHEIGHT = difficulty['BOARDHEIGHT']
+    # NUMICONS = difficulty['NUMICONS']
 
     # Other game parameters
     BOXSIZE = 70
@@ -128,6 +123,11 @@ def main():
     BOXCOLOR = NAVYBLUE
     HIGHLIGHTCOLOR = (0, 0, 255)
 
+    FPSCLOCK = pygame.time.Clock()
+    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+
+    pygame.display.set_caption('Memory Game')
+    
     # Initialize game
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     mainBoard = getRandomizedBoard(NUMICONS)
