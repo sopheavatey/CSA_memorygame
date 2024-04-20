@@ -1,4 +1,5 @@
-'''Not an important file'''
+'''Not an important file, just a test file no need to run it
+'''
 
 import pygame
 import sys

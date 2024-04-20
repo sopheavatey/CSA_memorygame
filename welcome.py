@@ -59,11 +59,11 @@ def welcomeScreen():
                     # Add code to handle easy difficulty selection
                     return easy.main()
                 elif mediumRect.collidepoint(mousex, mousey):
-                    print("Medium selected")
+                    # print("Medium selected")
                     return medium.main()
                     # Add code to handle medium difficulty selection
                 elif hardRect.collidepoint(mousex, mousey):
-                    print("Hard selected")
+                    # print("Hard selected")
                     return hard.main()
                     # Add code to handle hard difficulty selection
 
