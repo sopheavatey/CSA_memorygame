@@ -1,4 +1,4 @@
-'''run the program here'''
+'''just a test no need tto run'''
 import pygame
 import sys
 from pygame.locals import *
