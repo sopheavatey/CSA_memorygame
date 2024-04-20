@@ -14,23 +14,25 @@ XMARGIN = int((WINDOWWIDTH - (BOARDWIDTH * (BOXSIZE + GAPSIZE))) / 2) # calculat
 YMARGIN = int((WINDOWHEIGHT - (BOARDHEIGHT * (BOXSIZE + GAPSIZE))) / 2) # calculate the y-coordinate of the top left corner of the game board
 
 #            R    G    B
-GRAY     = (100, 100, 100)
-NAVYBLUE = ( 60,  60, 100)
 WHITE    = (255, 255, 255)
+BLACK    = (  0,  0,  0)
+GRAY     = (100, 100, 100)
 RED      = (255,   0,   0)
 GREEN    = (  0, 102,   0)
 BLUE     = (  0,   0, 255)
 YELLOW   = (255, 255,   0)
 ORANGE   = (255, 128,   0)
 PURPLE   = (255,   0, 255)
-BLACK    = (  0,  0,  0)
+NAVYBLUE = ( 60,  60, 100)
 LIGHTGRAY= (240, 240, 240)
-DARKGRAY = (40, 40, 40)
+DARKGRAY = ( 40,  40,  40)
+PORANGE  = (255, 144,  78)
+PSKIN    = (250, 248, 226)
 
-BGCOLOR = LIGHTGRAY
+BGCOLOR = PSKIN
 LIGHTBGCOLOR = GRAY
-BOXCOLOR = NAVYBLUE
-HIGHLIGHTCOLOR = BLACK
+BOXCOLOR = DARKGRAY
+HIGHLIGHTCOLOR = (127, 146, 158)
 
 SQUARE = 'square'
 DIAMOND = 'diamond'
@@ -52,40 +54,36 @@ def main():
     pygame.display.set_caption('Memory Game')
 
     while True:
-        DISPLAYSURF.fill((0, 0, 0))  # Use tuple for color
+        DISPLAYSURF.fill(PSKIN) 
 
-        font = pygame.font.SysFont('comic sans', 42)
-        titleText = font.render("WELCOME TO MEMORY GAME ", True, (255, 255, 255))  # Use tuple for color
+        font = pygame.font.SysFont('comic sans', 42, bold = True)
+        titleText = font.render("WELCOME TO MEMORY GAME ", True,(255, 120, 20) )  
         titleRect = titleText.get_rect()
         titleRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 5)
         DISPLAYSURF.blit(titleText, titleRect)
 
-        font = pygame.font.SysFont('comic sans', 30)
-        choiceText = font.render("PLEASE CHOOSE THE DIFFICULTY MODE", True, (255, 255, 255))  # Use tuple for color
-        choiceRect = titleText.get_rect()
+        font = pygame.font.SysFont('comic sans', 28)
+        choiceText = font.render("PLEASE CHOOSE THE DIFFICULTY MODE", True, (229, 99, 143))  # Use tuple for color
+        choiceRect = choiceText.get_rect()
         choiceRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 3 + 40)
         DISPLAYSURF.blit(choiceText, choiceRect)
 
         font = pygame.font.SysFont('comic sans', 28)
-        easyText = font.render("Easy", True, (255, 255, 255))  # Use tuple for color
+        easyText = font.render("Easy", True, (87, 240, 60))  # Use tuple for color
         easyRect = easyText.get_rect()
-        easyRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 20)
+        easyRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 40)
         DISPLAYSURF.blit(easyText, easyRect)
 
-        mediumText = font.render("Medium", True, (255, 255, 255))  # Use tuple for color
+        mediumText = font.render("Medium", True, (30, 160, 255))  # Use tuple for color
         mediumRect = mediumText.get_rect()
-        mediumRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 80)
+        mediumRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 100)
         DISPLAYSURF.blit(mediumText, mediumRect)
 
-        hardText = font.render("Hard", True, (255, 255, 255))  # Use tuple for color
+        hardText = font.render("Hard", True, (255, 10, 10))  # Use tuple for color
         hardRect = hardText.get_rect()
-        hardRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 140)
+        hardRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 160)
         DISPLAYSURF.blit(hardText, hardRect)
 
-        # exText = font.render("Experiment", True, (255, 255, 255))  # Use tuple for color
-        # exRect = mediumText.get_rect()
-        # exRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 140)
-        # DISPLAYSURF.blit(exText, exRect)
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -95,7 +93,7 @@ def main():
             elif event.type == MOUSEBUTTONUP:
                 mousex, mousey = event.pos
                 if easyRect.collidepoint(mousex, mousey):
-                    BOARDWIDTH = 3
+                    BOARDWIDTH = 2
                     BOARDHEIGHT = 4
                     calculateMargins()
                     return game()
@@ -351,26 +349,26 @@ def hasWon(revealedBoxes):
 def showCongratulations():
     # Display congratulatory message and options for continuing or quitting
     while True:
-        DISPLAYSURF.fill(DARKGRAY)
+        DISPLAYSURF.fill(PSKIN)
 
-        font = pygame.font.SysFont('comic sans', 42)
-        congratulationText = font.render("Congratulations!You've won!", True, WHITE)
+        font = pygame.font.SysFont('comic sans', 42, bold=True)
+        congratulationText = font.render("Congratulations! You've won!", True, BLACK)
         congratulationRect = congratulationText.get_rect()
         congratulationRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 4)
         DISPLAYSURF.blit(congratulationText, congratulationRect)
 
         font = pygame.font.SysFont('comic sans', 28)
-        continueText = font.render("Continue playing?", True, WHITE)
+        continueText = font.render("Continue playing?", True, (27, 160, 69))
         continueRect = continueText.get_rect()
-        continueRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2)
+        continueRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 - 20)
         DISPLAYSURF.blit(continueText, continueRect)
 
-        yesText = font.render("Yes", True, WHITE)
+        yesText = font.render("Yes", True, (38, 47, 255))
         yesRect = yesText.get_rect()
         yesRect.center = (WINDOWWIDTH // 2 - 50, WINDOWHEIGHT // 2 + 40)
         DISPLAYSURF.blit(yesText, yesRect)
 
-        noText = font.render("No", True, WHITE)
+        noText = font.render("No", True, (255, 10, 10))
         noRect = noText.get_rect()
         noRect.center = (WINDOWWIDTH // 2 + 50, WINDOWHEIGHT // 2 + 40)
         DISPLAYSURF.blit(noText, noRect)
@@ -390,10 +388,10 @@ def showCongratulations():
                 
 def showThankYouMessage():
     # Display "thank you" message before quitting the game
-    DISPLAYSURF.fill(DARKGRAY)
+    DISPLAYSURF.fill(PSKIN)
 
     font = pygame.font.SysFont('comic sans', 42)
-    thankYouText = font.render("Thank you for playing!", True, WHITE)
+    thankYouText = font.render("Thank you for playing!", True, (80, 31, 142))
     thankYouRect = thankYouText.get_rect()
     thankYouRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2)
     DISPLAYSURF.blit(thankYouText, thankYouRect)

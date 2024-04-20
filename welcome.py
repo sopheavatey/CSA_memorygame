@@ -3,7 +3,7 @@ import pygame
 import sys
 from pygame.locals import *
 from tkinter import *
-import easy, medium, hard,main
+# import easy, medium, hard,main
 
 
 WINDOWWIDTH = 700 
@@ -64,19 +64,19 @@ def welcomeScreen():
         DISPLAYSURF.blit(exText, exRect)
         pygame.display.update()
 
-        for event in pygame.event.get():
-            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                pygame.quit()
-                sys.exit()
-            elif event.type == MOUSEBUTTONUP:
-                mousex, mousey = event.pos
-                if easyRect.collidepoint(mousex, mousey):
-                    return easy.main()
-                elif mediumRect.collidepoint(mousex, mousey):
-                    return medium.main()
-                elif hardRect.collidepoint(mousex, mousey):
-                    return hard.main()
-                elif exRect.collidepoint(mousex, mousey):
-                    return main.main()
+        # for event in pygame.event.get():
+        #     if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+        #         pygame.quit()
+        #         sys.exit()
+        #     elif event.type == MOUSEBUTTONUP:
+        #         mousex, mousey = event.pos
+        #         if easyRect.collidepoint(mousex, mousey):
+        #             return easy.main()
+        #         elif mediumRect.collidepoint(mousex, mousey):
+        #             return medium.main()
+        #         elif hardRect.collidepoint(mousex, mousey):
+        #             return hard.main()
+        #         elif exRect.collidepoint(mousex, mousey):
+        #             return main.main()
 
 welcomeScreen()
