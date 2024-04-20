@@ -3,7 +3,7 @@ import pygame
 import sys
 from pygame.locals import *
 from tkinter import *
-import easy, medium, hard,experiment
+import easy, medium, hard,main
 
 
 WINDOWWIDTH = 700 
@@ -77,6 +77,6 @@ def welcomeScreen():
                 elif hardRect.collidepoint(mousex, mousey):
                     return hard.main()
                 elif exRect.collidepoint(mousex, mousey):
-                    return experiment.main()
+                    return main.main()
 
 welcomeScreen()
