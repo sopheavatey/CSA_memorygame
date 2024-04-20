@@ -2,13 +2,13 @@ import random, pygame, sys
 from pygame.locals import *
 
 FPS = 30 # frames per second, controls the overall speed of the game
-WINDOWWIDTH = 640 # width of the game window in pixels
-WINDOWHEIGHT = 480 # height of the game window in pixels
+WINDOWWIDTH = 700 # width of the game window in pixels
+WINDOWHEIGHT = 500 # height of the game window in pixels
 REVEALSPEED = 10 # speed at which boxes reveal and cover in pixels per frame
 BOXSIZE = 70 # size of each box (height and width) in pixels
 GAPSIZE = 10 # size of gap between boxes in pixels
-BOARDWIDTH = 2 # number of columns of boxes on the game board
-BOARDHEIGHT = 2 # number of rows of boxes on the game board
+BOARDWIDTH = 0 # number of columns of boxes on the game board
+BOARDHEIGHT = 0 # number of rows of boxes on the game board
 assert (BOARDWIDTH * BOARDHEIGHT) % 2 == 0, 'Board must have an even number of boxes for pairs of matches.'
 XMARGIN = int((WINDOWWIDTH - (BOARDWIDTH * (BOXSIZE + GAPSIZE))) / 2) # calculate the x-coordinate of the top left corner of the game board
 YMARGIN = int((WINDOWHEIGHT - (BOARDHEIGHT * (BOXSIZE + GAPSIZE))) / 2) # calculate the y-coordinate of the top left corner of the game board
@@ -23,7 +23,6 @@ BLUE     = (  0,   0, 255)
 YELLOW   = (255, 255,   0)
 ORANGE   = (255, 128,   0)
 PURPLE   = (255,   0, 255)
-CYAN     = (  0, 255, 255)
 BLACK    = (  0,  0,  0)
 LIGHTGRAY= (240, 240, 240)
 DARKGRAY = (40, 40, 40)
@@ -38,12 +37,80 @@ DIAMOND = 'diamond'
 LINES = 'lines'
 OVAL = 'oval'
 
-ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
+ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, BLACK)
 ALLSHAPES = (SQUARE, DIAMOND, LINES, OVAL)
 # validation for the game to be possible
 assert len(ALLCOLORS) * len(ALLSHAPES) * 2 >= BOARDWIDTH * BOARDHEIGHT, "Board is too big for the number of shapes/colors defined."
 
 def main():
+    pygame.init()
+    global FPSCLOCK, DISPLAYSURF
+    global BOARDWIDTH, BOARDHEIGHT
+    FPSCLOCK = pygame.time.Clock()
+    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+
+    pygame.display.set_caption('Memory Game')
+
+    while True:
+        DISPLAYSURF.fill((0, 0, 0))  # Use tuple for color
+
+        font = pygame.font.SysFont('comic sans', 42)
+        titleText = font.render("WELCOME TO MEMORY GAME ", True, (255, 255, 255))  # Use tuple for color
+        titleRect = titleText.get_rect()
+        titleRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 5)
+        DISPLAYSURF.blit(titleText, titleRect)
+
+        font = pygame.font.SysFont('comic sans', 30)
+        choiceText = font.render("PLEASE CHOOSE THE DIFFICULTY MODE", True, (255, 255, 255))  # Use tuple for color
+        choiceRect = titleText.get_rect()
+        choiceRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 3 + 40)
+        DISPLAYSURF.blit(choiceText, choiceRect)
+
+        font = pygame.font.SysFont('comic sans', 28)
+        easyText = font.render("Easy", True, (255, 255, 255))  # Use tuple for color
+        easyRect = easyText.get_rect()
+        easyRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 20)
+        DISPLAYSURF.blit(easyText, easyRect)
+
+        mediumText = font.render("Medium", True, (255, 255, 255))  # Use tuple for color
+        mediumRect = mediumText.get_rect()
+        mediumRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 80)
+        DISPLAYSURF.blit(mediumText, mediumRect)
+
+        hardText = font.render("Hard", True, (255, 255, 255))  # Use tuple for color
+        hardRect = hardText.get_rect()
+        hardRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 140)
+        DISPLAYSURF.blit(hardText, hardRect)
+
+        # exText = font.render("Experiment", True, (255, 255, 255))  # Use tuple for color
+        # exRect = mediumText.get_rect()
+        # exRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 + 140)
+        # DISPLAYSURF.blit(exText, exRect)
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+                pygame.quit()
+                sys.exit()
+            elif event.type == MOUSEBUTTONUP:
+                mousex, mousey = event.pos
+                if easyRect.collidepoint(mousex, mousey):
+                    BOARDWIDTH = 3
+                    BOARDHEIGHT = 4
+                    calculateMargins()
+                    return game()
+                elif mediumRect.collidepoint(mousex, mousey):
+                    BOARDWIDTH = 4
+                    BOARDHEIGHT = 4
+                    calculateMargins()
+                    return game()
+                elif hardRect.collidepoint(mousex, mousey):
+                    BOARDWIDTH = 6
+                    BOARDHEIGHT = 6
+                    calculateMargins()
+                    return game()
+
+def game():
     global FPSCLOCK, DISPLAYSURF
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
@@ -57,9 +124,6 @@ def main():
     revealedBoxes = generateRevealedBoxesData(False)
 
     firstSelection = None # stores the (x, y) of the first box clicked.
-
-    # DISPLAYSURF.fill(BGCOLOR)
-    # startGameAnimation(mainBoard)
 
     while True: # main game loop
         mouseClicked = False
@@ -100,22 +164,9 @@ def main():
                         revealedBoxes[boxx][boxy] = False
                     elif hasWon(revealedBoxes): # check if all pairs found
                         if showCongratulations():  # If player chooses to continue playing
-                            mainBoard = getRandomizedBoard()
-                            revealedBoxes = generateRevealedBoxesData(False)
-                            startGameAnimation(mainBoard)
+                            return main()
                         else:  # If player chooses to quit
                            showThankYouMessage()
-                        # Reset the board
-                        # mainBoard = getRandomizedBoard()
-                        # revealedBoxes = generateRevealedBoxesData(False)
-
-                        # # Show the fully unrevealed board for a second.
-                        # drawBoard(mainBoard, revealedBoxes)
-                        # pygame.display.update()
-                        # pygame.time.wait(1000)
-
-                        # Replay the start game animation.
-                        # startGameAnimation(mainBoard)
                     firstSelection = None # reset firstSelection variable
 
         # Redraw the screen and wait a clock tick.
@@ -160,16 +211,10 @@ def getRandomizedBoard():
         board.append(column)
     return board
 
-def splitIntoGroupsOf(groupSize, theList):
-    """
-    This function takes in two parameters, groupSize and theList.
-    It splits theList into a list of lists, where the inner lists have at most groupSize number of items.
-    """
-    result = [] #initialize an empty list to store the split lists
-    for i in range(0, len(theList), groupSize):  #iterate over theList with a step of groupSize
-        result.append(theList[i:i + groupSize]) #append a slice of theList from i to i+groupSize to the result list
-    return result #return the final list of lists.
-
+def calculateMargins():
+    global XMARGIN, YMARGIN
+    XMARGIN = int((WINDOWWIDTH - (BOARDWIDTH * (BOXSIZE + GAPSIZE))) / 2)
+    YMARGIN = int((WINDOWHEIGHT - (BOARDHEIGHT * (BOXSIZE + GAPSIZE))) / 2)
 
 def leftTopCoordsOfBox(boxx, boxy):
     """
@@ -286,13 +331,10 @@ def startGameAnimation(board):
         for y in range(BOARDHEIGHT):
             boxes.append( (x, y) )
     random.shuffle(boxes)
-    boxGroups = splitIntoGroupsOf(8, boxes)
+
     #Draw the initial state of the game board with all boxes covered
     drawBoard(board, coveredBoxes) 
-    #Iterate through each group of boxes and reveal them one group at a time with a slight delay between each group
-    # for boxGroup in boxGroups:
-    #     revealBoxesAnimation(board, boxGroup)
-    #     coverBoxesAnimation(board, boxGroup)
+
 
 
 def hasWon(revealedBoxes):
@@ -357,10 +399,10 @@ def showThankYouMessage():
     DISPLAYSURF.blit(thankYouText, thankYouRect)
 
     pygame.display.update()
-    pygame.time.wait(2000)  # Wait for 2 seconds before quitting
+    pygame.time.wait(3000)  # Wait for 3 seconds before quitting
     pygame.quit()
     sys.exit()
 
-
+# welcomeScreen()
 if __name__ == '__main__':
     main()
