@@ -54,13 +54,13 @@ def main():
         DISPLAYSURF.fill(BGCOLOR) 
 
         font = pygame.font.SysFont('comic sans', 42, bold = True)
-        titleText = font.render("WELCOME TO MEMORY GAME ", True,(255, 120, 20) )  
+        titleText = font.render("WELCOME TO MEMORY GAME ", True,BLACK )  
         titleRect = titleText.get_rect()
         titleRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 5)
         DISPLAYSURF.blit(titleText, titleRect)
 
         font = pygame.font.SysFont('comic sans', 28)
-        choiceText = font.render("PLEASE CHOOSE THE DIFFICULTY MODE", True, (229, 99, 143))  # Use tuple for color
+        choiceText = font.render("PLEASE CHOOSE THE DIFFICULTY MODE", True, BLACK)#(229, 99, 143))  # Use tuple for color
         choiceRect = choiceText.get_rect()
         choiceRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 3 + 40)
         DISPLAYSURF.blit(choiceText, choiceRect)
