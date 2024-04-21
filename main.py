@@ -1,6 +1,7 @@
 import random, pygame, sys
 from pygame.locals import *
 
+# set up the constants
 FPS = 30 # frames per second, controls the overall speed of the game
 WINDOWWIDTH = 700 # width of the game window in pixels
 WINDOWHEIGHT = 500 # height of the game window in pixels
@@ -38,13 +39,12 @@ OVAL = 'oval'
 
 ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, BLACK)
 ALLSHAPES = (SQUARE, DIAMOND, LINES, OVAL)
-# validation for the game to be possible
 assert len(ALLCOLORS) * len(ALLSHAPES) * 2 >= BOARDWIDTH * BOARDHEIGHT, "Board is too big for the number of shapes/colors defined."
 
 def main():
     pygame.init()
     global FPSCLOCK, DISPLAYSURF
-    global BOARDWIDTH, BOARDHEIGHT
+    global BOARDWIDTH, BOARDHEIGHT,BOXSIZE
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 
@@ -90,11 +90,13 @@ def main():
             elif event.type == MOUSEBUTTONUP:
                 mousex, mousey = event.pos
                 if easyRect.collidepoint(mousex, mousey):
-                    BOARDWIDTH = 2
-                    BOARDHEIGHT = 4
+                    BOXSIZE = 110
+                    BOARDWIDTH = 4
+                    BOARDHEIGHT = 2
                     calculateMargins()
                     return game()
                 elif mediumRect.collidepoint(mousex, mousey):
+                    BOXSIZE = 90
                     BOARDWIDTH = 4
                     BOARDHEIGHT = 4
                     calculateMargins()
@@ -291,7 +293,6 @@ def revealBoxesAnimation(board, boxesToReveal):
 def coverBoxesAnimation(board, boxesToCover):
     # Do the "box cover" animation.
     # Loop through a range of values, incrementing by the REVEALSPEED variable
-
     for coverage in range(0, BOXSIZE + REVEALSPEED, REVEALSPEED):
         drawBoxCovers(board, boxesToCover, coverage) #     # Draw the box covers with the current coverage level
 
@@ -319,17 +320,14 @@ def drawHighlightBox(boxx, boxy):
 
 
 def startGameAnimation(board):
-    # Randomly reveal the boxes 8 at a time.
     coveredBoxes = generateRevealedBoxesData(False)
     boxes = []
     for x in range(BOARDWIDTH):
         for y in range(BOARDHEIGHT):
             boxes.append( (x, y) )
     random.shuffle(boxes)
-
     #Draw the initial state of the game board with all boxes covered
     drawBoard(board, coveredBoxes) 
-
 
 
 def hasWon(revealedBoxes):
@@ -355,7 +353,7 @@ def showCongratulations():
         DISPLAYSURF.blit(congratulationText, congratulationRect)
 
         font = pygame.font.SysFont('comic sans', 28)
-        continueText = font.render("Continue playing?", True, (27, 160, 69))
+        continueText = font.render("Want to play again?", True, (27, 160, 69))
         continueRect = continueText.get_rect()
         continueRect.center = (WINDOWWIDTH // 2, WINDOWHEIGHT // 2 - 20)
         DISPLAYSURF.blit(continueText, continueRect)
@@ -398,6 +396,5 @@ def showThankYouMessage():
     pygame.quit()
     sys.exit()
 
-# welcomeScreen()
 if __name__ == '__main__':
     main()
